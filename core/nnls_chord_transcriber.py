@@ -27,6 +27,14 @@ from scipy.ndimage import uniform_filter1d
 
 warnings.filterwarnings('ignore')
 
+def is_available():
+    try:
+        import librosa
+        import scipy
+        return True
+    except ImportError:
+        return False
+
 # --- CHORD DICTIONARY (Embedded) ---
 CHORD_DICT_RAW = """
 ### Comma-Separated Chord Dictionaries
@@ -198,6 +206,28 @@ class ChordTranscriber:
                 start_time, curr_idx = sub_times[i], path[i]
         estimates.append({'label': self.chord_names[curr_idx], 'start': float(start_time), 'end': float(librosa.get_duration(y=audio, sr=self.sr))})
         return estimates
+def nnls_chord_transcribe(audio_path, return_beats=False):
+    """
+    High-level function to transcribe chords from an audio file.
+    """
+    audio, sr = librosa.load(audio_path, sr=44100)
+    transcriber = ChordTranscriber(sample_rate=sr)
+    
+    # Get beats
+    tempo, beat_frames = librosa.beat.beat_track(y=audio, sr=sr, hop_length=transcriber.hop_size)
+    beat_times = librosa.frames_to_time(beat_frames, sr=sr, hop_length=transcriber.hop_size)
+    
+    estimates = transcriber.transcribe(audio)
+    chords = [{'start': e['start'], 'end': e['end'], 'chord': e['label']} for e in estimates]
+    
+    if return_beats:
+        return {
+            'chords': chords,
+            'beats': beat_times.tolist(),
+            'tempo': float(tempo)
+        }
+    return chords
+
 
 def main():
     if len(sys.argv) < 2:

@@ -1,0 +1,27 @@
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="card bg-base-300 shadow-inner">
+        <div class="card-body gap-4">
+            <h3 class="text-xs font-black uppercase tracking-widest opacity-40">Vocals</h3>
+            <audio src="{{ vocals_url }}" controls class="w-full"></audio>
+        </div>
+    </div>
+    <div class="card bg-base-300 shadow-inner">
+        <div class="card-body gap-4">
+            <h3 class="text-xs font-black uppercase tracking-widest opacity-40">Accompaniment</h3>
+            <audio src="{{ no_vocals_url }}" controls class="w-full"></audio>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Update the app state so other tabs can find the vocals
+    if (typeof window.separatedPaths !== 'undefined') {
+        window.separatedPaths.vocals = "{{ vocals_path|escapejs }}";
+        window.separatedPaths.no_vocals = "{{ no_vocals_path|escapejs }}";
+    }
+    // Synchronize htmx hidden inputs for selective analysis redirection
+    const lyricsField = document.getElementById('lyrics-file-path');
+    const chordsField = document.getElementById('chords-file-path');
+    if (lyricsField) lyricsField.value = "{{ vocals_path|escapejs }}";
+    if (chordsField) chordsField.value = "{{ no_vocals_path|escapejs }}";
+</script>

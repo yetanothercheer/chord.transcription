@@ -1,0 +1,40 @@
+<h2 class="text-2xl font-bold mb-6 flex items-center gap-3">🎸 Chord Transcribe</h2>
+<div class="card bg-base-200 shadow-xl border border-base-300">
+    <div class="card-body">
+        <div
+            class="flex flex-wrap items-center justify-between gap-4 bg-base-300 p-6 rounded-xl mb-6 border border-base-content/5">
+            <div class="space-y-2">
+                <p class="text-sm font-bold opacity-70 uppercase tracking-widest text-[10px]">Algorithm Selection</p>
+                <div class="flex gap-2">
+                    <label
+                        class="label cursor-pointer gap-2 bg-base-100 px-4 py-2 rounded-lg border border-base-content/10 hover:border-primary/50 transition-all">
+                        <input type="radio" name="algorithm" value="nnls" class="radio radio-primary radio-sm"
+                            checked />
+                        <span class="label-text font-bold">Scheme B: NNLS Chroma</span>
+                    </label>
+                </div>
+                <p class="text-[10px] opacity-40 font-medium max-w-md">
+                    <b>NNLS:</b> Non-Negative Least Squares, precision for complex harmony.
+                </p>
+            </div>
+            <div class="flex items-center gap-4">
+                <input type="hidden" name="file_path" id="chords-file-path">
+                <button class="btn btn-primary btn-lg px-8 shadow-lg shadow-primary/20" id="btn-chords"
+                    hx-post="/chords/" hx-include="[name='algorithm'], #chords-file-path" hx-target="#chords-content"
+                    hx-indicator="#loader-chords"
+                    hx-on::after-request="if(event.detail.successful) document.getElementById('res-chords').classList.remove('hidden')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    </svg>
+                    Process
+                </button>
+                <div class="loading loading-ring loading-lg text-primary htmx-indicator" id="loader-chords"></div>
+            </div>
+        </div>
+        <div class="hidden" id="res-chords">
+            <div id="chords-content" class="flex flex-wrap gap-2 p-4 bg-base-300 rounded-xl">
+            </div>
+        </div>
+    </div>
+</div>

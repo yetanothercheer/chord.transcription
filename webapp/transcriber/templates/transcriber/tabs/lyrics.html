@@ -1,0 +1,30 @@
+<h2 class="text-2xl font-bold mb-6 flex items-center gap-3">📜 Timed Lyrics</h2>
+<div class="card bg-base-200 shadow-xl border border-base-300">
+    <div class="card-body">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div class="form-control">
+                <label class="label"><span class="label-text">Whisper Model</span></label>
+                <input type="text" name="model_name" id="arg-lyrics-model" value="base" class="input input-bordered">
+            </div>
+            <div class="form-control">
+                <label class="label"><span class="label-text">Language</span></label>
+                <input type="text" name="language" id="arg-lyrics-lang" value="zh" class="input input-bordered">
+            </div>
+            <div class="flex items-center gap-4">
+                <input type="hidden" name="file_path" id="lyrics-file-path">
+                <button class="btn btn-primary" id="btn-lyrics" hx-post="/lyrics/"
+                    hx-include="#arg-lyrics-model, #arg-lyrics-lang, #lyrics-file-path" hx-target="#lyrics-content"
+                    hx-indicator="#loader-lyrics"
+                    hx-on::after-request="if(event.detail.successful) document.getElementById('res-lyrics').classList.remove('hidden')">
+                    Transcribe
+                </button>
+                <div class="loading loading-ring loading-lg text-primary htmx-indicator" id="loader-lyrics"></div>
+            </div>
+        </div>
+        <div class="mt-8 hidden" id="res-lyrics">
+            <div id="lyrics-content"
+                class="bg-base-300 rounded-xl p-6 max-h-[50vh] overflow-y-auto leading-relaxed text-sm md:text-base">
+            </div>
+        </div>
+    </div>
+</div>

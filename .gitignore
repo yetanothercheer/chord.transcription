@@ -46,5 +46,11 @@ data/
 # Logs
 *.log
 
-docs
-external
+webapp/media/*
+
+# Database
+webapp/db.sqlite3
+*.sqlite3
+
+# Binaries
+**/tailwindcss

@@ -1,0 +1,21 @@
+<div class="space-y-4 w-full">
+    <div class="flex items-center justify-between opacity-50 px-2">
+        <span class="text-[10px] uppercase tracking-widest font-black">Detected Chords</span>
+        <span class="badge badge-sm badge-ghost text-[10px] uppercase tracking-tighter font-bold">via {{
+            algorithm|default:"NNLS" }}</span>
+    </div>
+    <div class="grid grid-cols-4 md:grid-cols-8 gap-3">
+        {% for chord in chords %}
+        <div class="group relative">
+            <div
+                class="badge badge-outline badge-primary font-black p-4 h-auto text-sm w-full transition-all duration-300 group-hover:bg-primary group-hover:text-white cursor-default">
+                {{ chord.chord }}
+            </div>
+            <div
+                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-base-300 text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none border border-base-content/10 font-mono">
+                {{ chord.start|stringformat:".2f" }}s - {{ chord.end|stringformat:".2f" }}s
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,101 @@
+<!-- Sidebar -->
+<div class="drawer-side z-10">
+    <label for="app-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+    <aside class="w-80 min-h-full bg-base-200 p-6 flex flex-col gap-8">
+        <header class="mb-4">
+            <h1
+                class="text-3xl font-black bg-gradient-to-r from-white to-primary bg-clip-text text-transparent tracking-tighter">
+                Symphony
+            </h1>
+        </header>
+
+        <!-- Upload Section -->
+        <div class="form-control">
+            <label class="label mb-2">
+                <span class="label-text-alt uppercase tracking-widest opacity-50 font-bold">Workspace</span>
+            </label>
+            <form hx-post="/upload/" hx-encoding="multipart/form-data" hx-swap="none" hx-on::after-request="if(event.detail.successful) { 
+                    const data = JSON.parse(event.detail.xhr.responseText);
+                    document.querySelectorAll('input[name=\'file_path\']').forEach(i => i.value = data.file_path);
+                    document.getElementById('file-name').textContent = data.file_name;
+                    document.getElementById('welcome-message')?.classList.add('hidden');
+                    document.getElementById('current-task-status').textContent = 'Analyzing: ' + data.file_name;
+                }">
+                <div onclick="document.getElementById('file-input').click()"
+                    class="border-2 border-dashed border-base-content/20 rounded-2xl p-8 text-center hover:border-primary/50 hover:bg-base-300 transition-all cursor-pointer group">
+                    <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">💿</div>
+                    <p id="file-name" class="text-xs font-bold leading-tight opacity-70 group-hover:opacity-100">
+                        Drop audio to begin
+                    </p>
+                    <input type="file" name="audio" id="file-input" accept="audio/*" class="hidden"
+                        onchange="this.form.dispatchEvent(new Event('submit', {bubbles: true}))">
+                </div>
+            </form>
+
+            <!-- Available Songs -->
+            {% if available_songs %}
+            <div class="mt-4">
+                <label class="label">
+                    <span class="label-text-alt uppercase tracking-widest opacity-50 font-bold text-[10px]">Quick
+                        Select</span>
+                </label>
+                <div class="flex flex-wrap gap-2">
+                    {% for song in available_songs %}
+                    <button class="badge badge-outline badge-sm hover:badge-primary transition-colors cursor-pointer"
+                        onclick="selectSong('{{ song.path }}', '{{ song.name }}')">
+                        {{ song.name }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex-1">
+            <label class="label mb-2">
+                <span class="label-text-alt uppercase tracking-widest opacity-50 font-bold">Analysis Passes</span>
+            </label>
+            <ul class="menu menu-md p-0 gap-2 overflow-hidden">
+                <li>
+                    <label for="tab-state-pipeline"
+                        class="flex gap-3 h-12 cursor-pointer rounded-lg px-4 py-2 transition-colors">
+                        <span class="text-xl">🚀</span> <span class="font-bold">Pipeline</span>
+                    </label>
+                </li>
+                <li>
+                    <label for="tab-state-stems"
+                        class="flex gap-3 h-12 cursor-pointer rounded-lg px-4 py-2 transition-colors">
+                        <span class="text-xl">🎭</span> <span class="font-bold">Stems</span>
+                    </label>
+                </li>
+                <li>
+                    <label for="tab-state-lyrics"
+                        class="flex gap-3 h-12 cursor-pointer rounded-lg px-4 py-2 transition-colors">
+                        <span class="text-xl">📜</span> <span class="font-bold">Lyrics</span>
+                    </label>
+                </li>
+                <li>
+                    <label for="tab-state-chords"
+                        class="flex gap-3 h-12 cursor-pointer rounded-lg px-4 py-2 transition-colors">
+                        <span class="text-xl">🎸</span> <span class="font-bold">Chords</span>
+                    </label>
+                </li>
+                <li>
+                    <label for="tab-state-notes"
+                        class="flex gap-3 h-12 cursor-pointer rounded-lg px-4 py-2 transition-colors">
+                        <span class="text-xl">🔊</span> <span class="font-bold">Notes</span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+
+        <footer class="mt-auto pt-6 border-t border-base-300">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="badge badge-primary badge-xs ring ring-primary ring-offset-2 ring-offset-base-200"></div>
+                <span class="text-[10px] font-black uppercase tracking-widest opacity-40">System Online</span>
+            </div>
+            <p class="text-[10px] opacity-40 font-medium">Whisper + Demucs + NNLS-Chroma + Basic-Pitch</p>
+        </footer>
+    </aside>
+</div>

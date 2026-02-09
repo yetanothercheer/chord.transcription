@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Symphony AI | Music Analysis Station{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                },
+            },
+            daisyui: {
+                themes: ["night"],
+            },
+        }
+    </script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <style>
+        @layer base {
+            body {
+                background-image: radial-gradient(at 0% 0%, oklch(var(--p) / 0.05) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, oklch(var(--s) / 0.05) 0px, transparent 50%);
+            }
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, white, oklch(var(--p)), oklch(var(--s)));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: oklch(var(--bc) / 0.1);
+            border-radius: 99px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: oklch(var(--bc) / 0.2);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-base-300 h-screen overflow-hidden flex flex-col font-sans antialiased"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <!-- Premium Header -->
+    <header class="flex-none z-50 bg-base-200/50 backdrop-blur-xl border-b border-white/5 shadow-xl">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="flex items-center justify-center w-9 h-9 bg-gradient-to-br from-primary to-secondary rounded-xl shadow-lg shadow-primary/20">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-black text-gradient tracking-tight">Symphony AI</h1>
+                        <div class="flex items-center gap-2 opacity-40">
+                            <span class="text-[8px] uppercase tracking-widest font-black">Control Station</span>
+                            <span class="w-1 h-1 bg-current rounded-full"></span>
+                            <span id="current-task-status"
+                                class="text-[8px] uppercase tracking-widest font-black">Idle</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <!-- Theme Selector -->
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-xs gap-2 opacity-60 hover:opacity-100">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 2.828l-6.707 6.707a4 4 0 01-5.656 0l-1.414-1.414" />
+                            </svg>
+                            <span class="text-[10px] uppercase font-bold tracking-tighter">Theme</span>
+                        </div>
+                        <ul tabindex="0"
+                            class="dropdown-content z-[100] menu p-2 shadow-2xl bg-base-300 rounded-box w-52 mt-4 border border-white/5 backdrop-blur-2xl">
+                            <li><button onclick="changeTheme('night')" class="text-xs">🌌 Night</button></li>
+                            <li><button onclick="changeTheme('luxury')" class="text-xs">💎 Luxury</button></li>
+                            <li><button onclick="changeTheme('dracula')" class="text-xs">🧛 Dracula</button></li>
+                            <li><button onclick="changeTheme('emerald')" class="text-xs">🍃 Emerald</button></li>
+                            <li><button onclick="changeTheme('retro')" class="text-xs">📻 Retro</button></li>
+                        </ul>
+                    </div>
+
+                    <div class="h-4 w-px bg-white/10"></div>
+
+                    <div class="flex items-center gap-2 px-2 py-1 bg-success/10 border border-success/20 rounded-lg">
+                        <div class="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></div>
+                        <span class="text-[9px] font-black text-success uppercase">Online</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        function changeTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('selected-theme', theme);
+        }
+        const savedTheme = localStorage.getItem('selected-theme') || 'night';
+        document.body.setAttribute('data-theme', savedTheme);
+    </script>
+
+    <!-- Main Content (Scrollable) -->
+    <main class="flex-1 overflow-y-auto px-6 py-8">
+        <div class="container mx-auto">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Minimal Footer/Status Bar -->
+    <footer class="flex-none border-t border-white/5 bg-base-200/30 px-6 py-2">
+        <div class="container mx-auto flex items-center justify-between opacity-30">
+            <p class="text-[9px] font-bold uppercase tracking-widest">
+                Whisper • Demucs • NNLS-Chroma • Basic-Pitch
+            </p>
+            <div class="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest">
+                <span>V2.4.0</span>
+                <span class="w-1 h-1 bg-current rounded-full"></span>
+                <span>Open Source</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'transcriber/js/app.js' %}?v=3"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

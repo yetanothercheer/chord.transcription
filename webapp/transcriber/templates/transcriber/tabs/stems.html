@@ -1,0 +1,22 @@
+<div id="status-alerts-stems" hx-get="/status/fragments/" hx-trigger="load, every 10s" class="mb-4"></div>
+<h2 class="text-2xl font-bold mb-6 flex items-center gap-3">🎭 Source Separation</h2>
+<div class="card bg-base-200 shadow-xl border border-base-300">
+    <div class="card-body">
+        <div class="flex flex-wrap items-end gap-4">
+            <div class="form-control w-full max-w-xs">
+                <label class="label"><span class="label-text">Model</span></label>
+                <input type="text" name="model_name" id="arg-stems-model" value="htdemucs" class="input input-bordered">
+            </div>
+            <input type="hidden" name="file_path" id="stems-file-path">
+            <button class="btn btn-primary" id="btn-stems" hx-post="/stems/"
+                hx-include="#arg-stems-model, #stems-file-path" hx-target="#res-stems" hx-indicator="#loader-stems"
+                hx-on::after-request="if(event.detail.successful) document.getElementById('res-stems').classList.remove('hidden')">
+                Process Stems
+            </button>
+            <div class="loading loading-ring loading-lg text-primary htmx-indicator" id="loader-stems"></div>
+        </div>
+        <div class="mt-8 hidden" id="res-stems">
+            <!-- HTMX Swaps Content Here -->
+        </div>
+    </div>
+</div>

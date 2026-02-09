@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@source "../../../templates/**/*.html";
+@source not "./tailwindcss";
+@source not "./daisyui{,*}.mjs";
+@plugin "./daisyui.mjs";
+@plugin "./daisyui-theme.mjs";
+
+@layer base {
+    body {
+        @apply selection:bg-primary/30 selection:text-white;
+        background-image: radial-gradient(at 0% 0%, oklch(var(--p) / 0.05) 0px, transparent 50%),
+            radial-gradient(at 100% 0%, oklch(var(--s) / 0.05) 0px, transparent 50%);
+    }
+}
+
+@layer components {
+    .glass-card {
+        @apply backdrop-blur-md bg-base-100/30 border border-white/5 shadow-2xl;
+    }
+
+    .text-gradient {
+        @apply bg-gradient-to-r from-white via-primary to-secondary bg-clip-text text-transparent;
+    }
+}
+
+/* Custom transitions and scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-base-content/10 rounded-full hover:bg-base-content/20 transition-all;
+}
+
+.tab-active {
+    @apply bg-gradient-to-r from-primary to-secondary text-white border-none !important;
+}

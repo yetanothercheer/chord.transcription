@@ -1,16 +1,21 @@
-# MEMO: Chord Transcription Workflow
+# Chord Transcription Toolbox
 
-## Notes & Process
+## Available Tools
 
-- **Vocal Extraction** (Demucs)
-  - Purpose: Get clean accompaniment for better chord detection.
-  - CMD: `demucs --two-stems vocals "song.mp3" -o data/separated/`
+### 1. **Demucs** - Source Separation
+Separates audio into isolated stems (vocals, drums, bass, other). Extracts clean vocal and accompaniment tracks for downstream processing.
 
-- **Lyrics Transcription** (Whisper-CLI)
-  - Purpose: High-quality timed transcripts (Chinese `zh` optimized).
-  - CMD: `whisper-cli -m "path/to/model" -f "data/separated/.../vocals.wav" -l zh --vad -vm "path/to/vad" -vt 0.1 -oj -ml 3`
+### 2. **Whisper** - Lyrics Transcription
+OpenAI's Whisper model for automatic speech recognition. Transcribes vocals into timed lyrics with multi-language support (Chinese, English, Japanese, etc.).
 
-- **Chord Recognition** (NNLS-Chroma)
-  - Logic: Standalone script based on Mauch & Dixon (2010).
-  - Prerequisites: `pip install numpy librosa scipy numba` + `ffmpeg`.
-  - CMD: `python transcribe_chords.py "data/.../no_vocals.wav" [output.json]`
+### 3. **NNLS-Chroma** - Chord Recognition
+Non-Negative Least Squares Chroma-based chord recognition. Extracts harmonic content and identifies chord progressions with beat tracking and tempo estimation.
+
+### 4. **VAMP** - Alternative Chord Recognition
+VAMP plugin-based chord recognition system. Alternative chord detection method with different algorithmic approach.
+
+### 5. **Basic Pitch** - MIDI Transcription
+Spotify's Basic Pitch model for polyphonic pitch detection. Converts audio to MIDI note events with onset/offset timing.
+
+## Todo
+- [ ] Restore Madmom chord transcription support (currently removed due to build issues).

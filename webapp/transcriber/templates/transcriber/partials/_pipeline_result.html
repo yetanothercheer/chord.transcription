@@ -1,0 +1,49 @@
+<div class="space-y-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Chords Viewer -->
+        <div class="card bg-base-200 shadow-xl border border-base-300">
+            <div class="card-body">
+                <h3 class="card-title mb-4">🎸 Chord Sequence</h3>
+                <div class="flex flex-wrap gap-2 max-h-96 overflow-y-auto p-4 bg-base-300 rounded-xl">
+                    {% for item in result.chords %}
+                    <div class="badge badge-outline p-4 font-mono">
+                        <span class="opacity-50 text-[10px] mr-2">{{ item.start|stringformat:".1f" }}s</span>
+                        <span class="font-bold">{{ item.chord }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Lyrics Viewer -->
+        <div class="card bg-base-200 shadow-xl border border-base-300">
+            <div class="card-body">
+                <h3 class="card-title mb-4">📜 Lyrics Timeline</h3>
+                <div class="space-y-1 max-h-96 overflow-y-auto p-4 bg-base-300 rounded-xl leading-relaxed">
+                    {% for segment in result.lyrics %}
+                    <div class="hover:bg-base-100 p-1 rounded transition-colors group cursor-default">
+                        <span class="text-[10px] opacity-40 font-mono group-hover:opacity-100">{{
+                            segment.start|stringformat:".1f" }}s</span>
+                        <span class="ml-2 text-sm">{{ segment.text }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alignment Viewer (Conceptual) -->
+    <div class="card bg-base-200 shadow-xl border border-base-300">
+        <div class="card-body">
+            <h3 class="card-title mb-4">🎼 Full Transcription</h3>
+            <div class="bg-base-300 p-6 rounded-xl space-y-6">
+                <p class="text-xs opacity-50 uppercase tracking-widest font-bold">Tempo: {{
+                    result.tempo|stringformat:".1f" }} BPM</p>
+                <div id="full-aligned-view" class="space-y-4">
+                    <!-- This would be rendered/interacted via JS for best UX -->
+                    <p class="text-sm italic">All components aligned by beats. Launch player to follow along.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+<h2 class="text-2xl font-bold mb-6 flex items-center gap-3">🔊 Note Transcribe</h2>
+<div class="card bg-base-200 shadow-xl border border-base-300">
+    <div class="card-body">
+        <div class="flex flex-wrap items-center justify-between gap-4 bg-base-300 p-4 rounded-lg mb-6">
+            <p class="text-sm opacity-70">Algorithm: Google Basic-Pitch. Synthetic Sine-Wave Playback.</p>
+            <div class="flex items-center gap-4">
+                <input type="hidden" name="file_path" id="notes-file-path">
+                <button class="btn btn-primary" id="btn-notes" hx-post="/notes/" hx-include="#notes-file-path"
+                    hx-target="#notes-result-box" hx-indicator="#loader-notes"
+                    hx-on::after-request="if(event.detail.successful) document.getElementById('res-notes').classList.remove('hidden')">
+                    Transcribe Notes
+                </button>
+                <div class="loading loading-ring loading-lg text-primary htmx-indicator" id="loader-notes"></div>
+            </div>
+        </div>
+        <div class="hidden" id="res-notes">
+            <div id="notes-result-box"></div>
+        </div>
+    </div>
+</div>
